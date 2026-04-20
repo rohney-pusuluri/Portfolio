@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rohney Pusuluri — TPM · SDE · FDE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@300;400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0e0e;
+    --paper: #f5f0e8;
+    --rust: #c94a2b;
+    --gold: #d4a843;
+    --slate: #2a3a4a;
+    --fog: #ddd8cc;
+    --muted: #888077;
+    --cream: #faf7f2;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Instrument Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--rust);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+    mix-blend-mode: multiply;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--rust);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s ease, width 0.3s ease, height 0.3s ease;
+    opacity: 0.5;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 3rem;
+    background: rgba(245, 240, 232, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--fog);
+  }
+  .nav-logo {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--slate);
+  }
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--rust); }
+  .nav-cta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--rust);
+    padding: 0.5rem 1.2rem;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--slate); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5rem 3rem 5rem 4rem;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--rust);
+  }
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 10vw, 9rem);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+  }
+  .hero-name span { color: var(--rust); }
+  .hero-descriptor {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 1.35rem;
+    color: var(--slate);
+    line-height: 1.5;
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+  }
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 3rem;
+  }
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid currentColor;
+    padding: 0.35rem 0.8rem;
+    color: var(--slate);
+  }
+  .tag.accent { color: var(--rust); border-color: var(--rust); }
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .btn-primary {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.9rem 2rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .btn-primary:hover { background: var(--rust); transform: translateY(-2px); }
+  .btn-secondary {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+  }
+  .btn-secondary:hover { color: var(--rust); }
+
+  .hero-right {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .hero-visual {
+    position: absolute;
+    inset: 0;
+    background: var(--slate);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .hero-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.06);
+  }
+  .stat-cell {
+    background: var(--slate);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
+  }
+  .stat-cell:hover { background: #1e2d3d; }
+  .stat-cell::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 2px;
+    background: var(--rust);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .stat-cell:hover::before { transform: scaleX(1); }
+  .stat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    text-align: center;
+  }
+  .hero-scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    z-index: 2;
+  }
+  .scroll-line {
+    width: 40px;
+    height: 1px;
+    background: var(--muted);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0%, 100% { transform: scaleX(1); opacity: 0.4; }
+    50% { transform: scaleX(0.4); opacity: 1; }
+  }
+
+  /* SECTIONS */
+  section { position: relative; }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rust);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--rust);
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+  .section-title em { font-style: italic; color: var(--rust); }
+
+  /* PSYCHE SECTION */
+  .psyche {
+    padding: 7rem 4rem;
+    background: var(--ink);
+    color: var(--paper);
+    overflow: hidden;
+    position: relative;
+  }
+  .psyche::before {
+    content: 'WHO';
+    position: absolute;
+    right: -2rem;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18rem;
+    color: rgba(255,255,255,0.02);
+    pointer-events: none;
+    letter-spacing: 0.05em;
+  }
+  .psyche .section-label { color: var(--gold); }
+  .psyche .section-label::before { background: var(--gold); }
+  .psyche-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 5rem;
+    margin-top: 3rem;
+    align-items: start;
+  }
+  .psyche-intro {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.45rem;
+    line-height: 1.6;
+    color: rgba(245,240,232,0.88);
+  }
+  .psyche-intro strong { color: var(--gold); font-weight: normal; font-style: italic; }
+  .psyche-traits {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  .trait-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 1rem;
+    align-items: start;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .trait-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    color: rgba(255,255,255,0.1);
+    line-height: 1;
+  }
+  .trait-text h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+  .trait-text p {
+    font-size: 0.9rem;
+    color: rgba(245,240,232,0.6);
+    line-height: 1.6;
+  }
+  .quote-block {
+    background: rgba(255,255,255,0.04);
+    border-left: 3px solid var(--rust);
+    padding: 2rem;
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: rgba(245,240,232,0.75);
+    margin-top: 2rem;
+  }
+
+  /* PROOF SECTION */
+  .proof {
+    padding: 7rem 4rem;
+    background: var(--cream);
+  }
+  .proof-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+  }
+  .proof-card {
+    background: white;
+    padding: 2.5rem;
+    border-top: 3px solid var(--fog);
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .proof-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 0;
+    background: linear-gradient(to top, rgba(201,74,43,0.04), transparent);
+    transition: height 0.4s;
+  }
+  .proof-card:hover { border-color: var(--rust); transform: translateY(-4px); }
+  .proof-card:hover::after { height: 100%; }
+  .proof-icon {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .proof-card-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 0.8rem;
+  }
+  .proof-card h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem;
+    color: var(--ink);
+    margin-bottom: 0.8rem;
+    line-height: 1.3;
+  }
+  .proof-card p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .proof-metric {
+    margin-top: 1.2rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--fog);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--slate);
+  }
+  .proof-metric strong {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    color: var(--rust);
+    display: block;
+    line-height: 1;
+    margin-bottom: 0.2rem;
+  }
+
+  /* CAREER STORY */
+  .story {
+    padding: 7rem 4rem;
+    background: var(--paper);
+  }
+  .story-timeline {
+    margin-top: 4rem;
+    position: relative;
+  }
+  .story-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--rust), var(--fog));
+  }
+  .timeline-entry {
+    padding-left: 3rem;
+    margin-bottom: 4rem;
+    position: relative;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .timeline-entry.visible { opacity: 1; transform: translateX(0); }
+  .timeline-dot {
+    position: absolute;
+    left: -5px;
+    top: 0.3rem;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--rust);
+    border: 2px solid var(--paper);
+  }
+  .timeline-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .timeline-role {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--ink);
+    margin-bottom: 0.2rem;
+  }
+  .timeline-org {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--rust);
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+  }
+  .timeline-body {
+    font-size: 0.92rem;
+    color: #444;
+    line-height: 1.75;
+    max-width: 680px;
+  }
+  .timeline-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1rem;
+  }
+  .pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--fog);
+    color: var(--slate);
+    padding: 0.3rem 0.7rem;
+  }
+
+  /* PROJECTS */
+  .projects {
+    padding: 7rem 4rem;
+    background: var(--slate);
+    color: var(--paper);
+  }
+  .projects .section-label { color: var(--gold); }
+  .projects .section-label::before { background: var(--gold); }
+  .projects .section-title { color: var(--paper); }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+  }
+  .project-card {
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 2rem;
+    position: relative;
+    transition: border-color 0.3s, background 0.3s;
+    overflow: hidden;
+  }
+  .project-card:hover {
+    border-color: var(--gold);
+    background: rgba(255,255,255,0.02);
+  }
+  .project-card:first-child {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+  .project-type {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .project-type::before {
+    content: '▶';
+    font-size: 0.5rem;
+  }
+  .project-card h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem;
+    color: var(--paper);
+    margin-bottom: 0.8rem;
+    line-height: 1.3;
+  }
+  .project-card p {
+    font-size: 0.88rem;
+    color: rgba(245,240,232,0.55);
+    line-height: 1.7;
+  }
+  .project-stats {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .p-stat {
+    text-align: center;
+  }
+  .p-stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--gold);
+    display: block;
+    line-height: 1;
+  }
+  .p-stat-lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    display: block;
+    margin-top: 0.2rem;
+  }
+  .tech-stack {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .tech-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    background: rgba(255,255,255,0.06);
+    color: rgba(245,240,232,0.5);
+    padding: 0.25rem 0.6rem;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* MATRIX - SDE/TPM/FDE */
+  .matrix {
+    padding: 7rem 4rem;
+    background: var(--paper);
+    overflow: hidden;
+  }
+  .matrix-inner {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin-top: 4rem;
+    border: 1px solid var(--fog);
+  }
+  .matrix-col {
+    border-right: 1px solid var(--fog);
+    padding: 3rem 2.5rem;
+    position: relative;
+    transition: background 0.3s;
+  }
+  .matrix-col:last-child { border-right: none; }
+  .matrix-col:hover { background: var(--cream); }
+  .matrix-col-header {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.4rem;
+    line-height: 1;
+  }
+  .matrix-col:nth-child(1) .matrix-col-header { color: var(--rust); }
+  .matrix-col:nth-child(2) .matrix-col-header { color: var(--slate); }
+  .matrix-col:nth-child(3) .matrix-col-header { color: var(--gold); }
+  .matrix-col-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--fog);
+  }
+  .matrix-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .matrix-item {
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+    font-size: 0.87rem;
+    color: #555;
+    line-height: 1.5;
+  }
+  .matrix-item::before {
+    content: '→';
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  /* OUTSIDE THE TERMINAL */
+  .outside {
+    padding: 7rem 4rem;
+    background: var(--ink);
+    color: var(--paper);
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 6rem;
+    align-items: center;
+  }
+  .outside .section-label { color: var(--gold); }
+  .outside .section-label::before { background: var(--gold); }
+  .outside .section-title { color: var(--paper); }
+  .outside-text {
+    font-size: 0.95rem;
+    color: rgba(245,240,232,0.62);
+    line-height: 1.8;
+    margin-top: 1.5rem;
+  }
+  .outside-text p { margin-bottom: 1rem; }
+  .outside-mosaic {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 80px);
+    gap: 6px;
+  }
+  .mosaic-tile {
+    background: rgba(255,255,255,0.04);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    transition: background 0.3s, color 0.3s;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .mosaic-tile:hover { background: rgba(212,168,67,0.12); color: var(--gold); }
+  .mosaic-tile .emoji { font-size: 1.4rem; }
+  .mosaic-tile.span2 { grid-column: span 2; }
+  .mosaic-tile.tall { grid-row: span 2; }
+
+  /* CONTACT */
+  .contact {
+    padding: 6rem 4rem;
+    background: var(--cream);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact::before {
+    content: 'LETS TALK';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14rem;
+    color: rgba(0,0,0,0.03);
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: 0.08em;
+  }
+  .contact-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .contact h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    color: var(--ink);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+  .contact h2 em { font-style: italic; color: var(--rust); }
+  .contact-sub {
+    font-size: 1rem;
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.7;
+  }
+  .contact-btn {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    background: var(--rust);
+    color: var(--paper);
+    padding: 1rem 2.5rem;
+    text-decoration: none;
+    transition: background 0.25s, transform 0.25s;
+  }
+  .contact-btn:hover { background: var(--ink); transform: translateY(-2px); }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    padding: 2rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  .footer-copy {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.25);
+  }
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+  .footer-links a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--gold); }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    overflow: hidden;
+    background: var(--rust);
+    padding: 0.75rem 0;
+    white-space: nowrap;
+  }
+  .marquee-inner {
+    display: inline-flex;
+    animation: marquee 30s linear infinite;
+  }
+  .marquee-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    color: rgba(245,240,232,0.7);
+    padding: 0 2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .marquee-item::after {
+    content: '◆';
+    font-size: 0.4rem;
+    color: rgba(245,240,232,0.4);
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ANIMATIONS */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+  .fade-up:nth-child(2) { transition-delay: 0.1s; }
+  .fade-up:nth-child(3) { transition-delay: 0.2s; }
+  .fade-up:nth-child(4) { transition-delay: 0.3s; }
+
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { min-height: 320px; }
+    .hero-left { padding: 4rem 1.5rem 2rem; }
+    .psyche, .proof, .story, .projects, .matrix, .outside, .contact, footer { padding: 4rem 1.5rem; }
+    .psyche-grid, .proof-grid, .projects-grid, .matrix-inner, .outside { grid-template-columns: 1fr; }
+    .project-card:first-child { grid-column: span 1; grid-template-columns: 1fr; }
+    .matrix-col { border-right: none; border-bottom: 1px solid var(--fog); }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Rohney Pusuluri</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#proof">Work</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+  </ul>
+  <a class="nav-cta" href="https://www.linkedin.com/in/rohney-pusuluri/" target="_blank">Connect on LinkedIn</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">rohney.io · Senior TPM at AWS</div>
+    <h1 class="hero-name">ROHNEY<br><span>PUSULURI</span></h1>
+    <p class="hero-descriptor">I build systems that outlast me, programs that run without me, and frameworks that every team after me just calls "the standard."</p>
+    <div class="hero-tags">
+      <span class="tag accent">Technical Program Manager</span>
+      <span class="tag accent">Software Engineer</span>
+      <span class="tag accent">Forward Deployment</span>
+      <span class="tag">AWS · Route 53</span>
+      <span class="tag">FedRAMP · IL4 · IL5</span>
+      <span class="tag">Distributed Systems</span>
+      <span class="tag">Yoga Instructor</span>
+    </div>
+    <div class="hero-actions">
+      <a href="https://www.linkedin.com/in/rohney-pusuluri/" target="_blank" class="btn-primary">View LinkedIn</a>
+      <a href="#proof" class="btn-secondary">See the work <span>↓</span></a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-visual">
+      <div class="hero-stats-grid">
+        <div class="stat-cell">
+          <div class="stat-number">$4.4B</div>
+          <div class="stat-label">NZ Region<br>Sole TPM</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-number">60×</div>
+          <div class="stat-label">Perf. Gain<br>Consensus Algo</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-number">95%</div>
+          <div class="stat-label">Per-Region<br>Effort Reduction</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-number">3YR</div>
+          <div class="stat-label">Zero Breaches<br>FedRAMP</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-number">73%</div>
+          <div class="stat-label">MTTR<br>Reduction</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-number">8+</div>
+          <div class="stat-label">Global Regions<br>on My Framework</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <div class="scroll-line"></div>
+    scroll to explore
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap" aria-hidden="true">
+  <div class="marquee-inner">
+    <span class="marquee-item">AWS New Zealand Region</span>
+    <span class="marquee-item">Consensus Algorithm</span>
+    <span class="marquee-item">FedRAMP · IL4 · IL5</span>
+    <span class="marquee-item">100K+ Weekly Patch Events</span>
+    <span class="marquee-item">10M+ Daily Metrics</span>
+    <span class="marquee-item">Force Multiplier</span>
+    <span class="marquee-item">Incident Commander</span>
+    <span class="marquee-item">6.85M Endpoints</span>
+    <span class="marquee-item">AWS New Zealand Region</span>
+    <span class="marquee-item">Consensus Algorithm</span>
+    <span class="marquee-item">FedRAMP · IL4 · IL5</span>
+    <span class="marquee-item">100K+ Weekly Patch Events</span>
+    <span class="marquee-item">10M+ Daily Metrics</span>
+    <span class="marquee-item">Force Multiplier</span>
+    <span class="marquee-item">Incident Commander</span>
+    <span class="marquee-item">6.85M Endpoints</span>
+  </div>
+</div>
+
+<!-- PSYCHE / WHO -->
+<section class="psyche" id="about">
+  <div class="section-label">Who I Am</div>
+  <h2 class="section-title" style="color: var(--paper);">Wired differently.<br><em>Useful everywhere.</em></h2>
+  <div class="psyche-grid">
+    <div>
+      <p class="psyche-intro">
+        I grew up with a bioscience teacher for a mom who made me deeply curious about how systems fail — and how people heal them. I wanted to be a doctor. Then I realized I could do the same thing for software infrastructure at AWS scale. I joined AWS as a software engineer and worked my way into owning programs that touch millions of endpoints, classified government cloud, and one very large $4.4B country-scale region launch.
+        <br><br>
+        <strong>I am not a TPM who manages Jira tickets.</strong> I write production code, design consensus algorithms, and build the tooling that makes everyone around me faster. I pick up what is about to fall before it hits the floor.
+      </p>
+      <div class="quote-block">
+        "I built RedSkull because I couldn't bear to see another new hire go through what I went through. I built Friday Recap because verbal standups are unreliable. I built the Tampermonkey tracker because I was on call and felt the pain myself. These weren't assigned. They were necessary."
+      </div>
+    </div>
+    <div>
+      <div class="psyche-traits">
+        <div class="trait-item">
+          <div class="trait-num">01</div>
+          <div class="trait-text">
+            <h4>Force Multiplier</h4>
+            <p>I don't just do my job. I redesign the conditions so others do theirs better. Every framework I build gets inherited by the next team.</p>
+          </div>
+        </div>
+        <div class="trait-item">
+          <div class="trait-num">02</div>
+          <div class="trait-text">
+            <h4>Calm Under Chaos</h4>
+            <p>Yoga instructor. NCC-trained. Incident commander on 112-minute production outages affecting 6.85M endpoints. These things are related.</p>
+          </div>
+        </div>
+        <div class="trait-item">
+          <div class="trait-num">03</div>
+          <div class="trait-text">
+            <h4>Teacher at Heart</h4>
+            <p>I taught math and physics before tech. That instinct to transfer knowledge carefully shows up in onboarding programs, cross-team syncs, and DEI talks for AWS communities.</p>
+          </div>
+        </div>
+        <div class="trait-item">
+          <div class="trait-num">04</div>
+          <div class="trait-text">
+            <h4>Structural Problem Solver</h4>
+            <p>I look for root causes, not symptoms. The capacity audit that unblocked the NZ region build happened because I asked one question in a kickoff meeting that nobody else thought to ask.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF OF WORK -->
+<section class="proof" id="proof">
+  <div class="section-label">Proof of Work</div>
+  <h2 class="section-title">Not a resume.<br><em>A track record.</em></h2>
+  <div class="proof-grid">
+
+    <div class="proof-card fade-up">
+      <span class="proof-icon">🌏</span>
+      <div class="proof-card-label">TPM · Geographic Expansion</div>
+      <h3>AWS New Zealand Region Launch</h3>
+      <p>Sole TPM on the $4.4B region build. No playbook. No prior solo-TPM precedent at this scale. I mapped 500+ host classes, audited every dependency within 48 hours, standardized 250+ CI/CD pipelines, and automated all 100 service components in Python. Shipped September 2025, zero SLA breaches.</p>
+      <div class="proof-metric"><strong>95%</strong> per-region engineering effort reduction. 8+ global regions now built on this framework.</div>
+    </div>
+
+    <div class="proof-card fade-up">
+      <span class="proof-icon">⚡</span>
+      <div class="proof-card-label">SDE · Distributed Systems</div>
+      <h3>Consensus Algorithm: 112-Min Outage Resolved</h3>
+      <p>A single Global Aggregator published bad data. Blast radius: 100%. 6.85M endpoints. No consensus mechanism existed. I evaluated Paxos, Raft, and majority voting, then built a 2-of-3 quorum design with graceful degradation. Delivered through 5-phase validation in 4 weeks. In production.</p>
+      <div class="proof-metric"><strong>60×</strong> performance improvement (2.7B → 49M ops/cycle). 9× data consistency gain.</div>
+    </div>
+
+    <div class="proof-card fade-up">
+      <span class="proof-icon">🔐</span>
+      <div class="proof-card-label">TPM · Security Program</div>
+      <h3>FedRAMP: 3 Years, Zero Breaches</h3>
+      <p>Led 10+ security campaigns across commercial, FedRAMP US Gov (IL4/IL5), and air-gapped classified environments. 1,000+ regulated endpoints. Built the execution framework from scratch: risk-based prioritization, escalation protocols, corrective action tracking, and SQL dashboards for monthly VP reviews.</p>
+      <div class="proof-metric"><strong>71%</strong> audit prep reduction. 60% less vulnerability exposure. 83% fewer escalations.</div>
+    </div>
+
+    <div class="proof-card fade-up">
+      <span class="proof-icon">📊</span>
+      <div class="proof-card-label">SDE · Observability</div>
+      <h3>Health Analytics Platform</h3>
+      <p>Built the entire stack from scratch: Java, Elasticsearch, Kibana, SQL. 10M+ daily metrics. 1M+ endpoints. I added whale customer monitoring with a custom Python scraper that fired alerts before enterprise issues became visible to customers. The team went from reactive firefighting to proactive prevention.</p>
+      <div class="proof-metric"><strong>73%</strong> MTTR reduction. 40% of incidents caught before reaching customers.</div>
+    </div>
+
+    <div class="proof-card fade-up">
+      <span class="proof-icon">🛡️</span>
+      <div class="proof-card-label">SDE · Security Engineering</div>
+      <h3>Cryptographic Authentication System</h3>
+      <p>Millions of health check packets were completely unauthenticated. A compromised monitoring node could inject arbitrary data with zero detection. I built a versioned cryptographic signing-key system in Java with region-isolated keys, integrated into the 6-thread UDP pipeline. Zero downtime across 38+ regions.</p>
+      <div class="proof-metric"><strong>38+</strong> global regions secured. Seamless key rotation, no coordinated downtime required.</div>
+    </div>
+
+    <div class="proof-card fade-up">
+      <span class="proof-icon">🔧</span>
+      <div class="proof-card-label">FDE · Tooling & Automation</div>
+      <h3>Tampermonkey Deployment Tracker</h3>
+      <p>During live Sev2 incidents, finding which of 300+ pipelines caused a regression meant navigating multiple systems manually. I wrote a browser script that scraped 700+ deployment pages and injected the latest state directly into incident tickets. Nobody asked me to. I was on call, felt the pain, and built the fix.</p>
+      <div class="proof-metric"><strong>40%</strong> reduction in Sev2 triage time. Zero infrastructure cost. One week to build.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CAREER TIMELINE -->
+<section class="story" id="story">
+  <div class="section-label">Career Arc</div>
+  <h2 class="section-title">How I got here.<br><em>The non-linear path.</em></h2>
+  <div class="story-timeline">
+
+    <div class="timeline-entry">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2017 — 2018</div>
+      <div class="timeline-role">Math & Physics Teacher</div>
+      <div class="timeline-org">India</div>
+      <p class="timeline-body">Before tech, I taught. This wasn't a detour. Every cross-team knowledge transfer, every AWS onboarding program I built, every VP briefing I simplified — this background is in all of it. Teaching forces you to find the explanation that actually lands, not the one that sounds impressive.</p>
+      <div class="timeline-pills">
+        <span class="pill">Knowledge Transfer</span>
+        <span class="pill">Communication</span>
+        <span class="pill">Curriculum Design</span>
+      </div>
+    </div>
+
+    <div class="timeline-entry">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2018 — 2019</div>
+      <div class="timeline-role">Full Stack Engineer + Scrum Master</div>
+      <div class="timeline-org">Accenture · Hyderabad</div>
+      <p class="timeline-body">Joined a Java high-availability trading platform. Sprint completion was erratic. I took on the Scrum Master role alongside engineering, introduced explicit dependency mapping at planning, and built a blocker escalation protocol. Sprint completion improved 39% across 3 releases. The instinct to identify a gap, own it without being asked, and deliver a measurable fix — that pattern has repeated itself ever since.</p>
+      <div class="timeline-pills">
+        <span class="pill">Java</span>
+        <span class="pill">Full Stack</span>
+        <span class="pill">Agile/Scrum</span>
+        <span class="pill">Process Design</span>
+      </div>
+    </div>
+
+    <div class="timeline-entry">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2019 — 2021</div>
+      <div class="timeline-role">M.S. Engineering Science (Data Science)</div>
+      <div class="timeline-org">State University of New York at Buffalo</div>
+      <p class="timeline-body">Built predictive models on clinical health data, medical image classification with CNNs for cancer detection, and transaction fraud detection at scale. The medicine-adjacent work was deliberate. I still want to understand how systems fail and how to detect failure before it becomes catastrophic — whether that system is a human body or a distributed fleet of 6.85M health check endpoints.</p>
+      <div class="timeline-pills">
+        <span class="pill">Python</span>
+        <span class="pill">Machine Learning</span>
+        <span class="pill">CNNs · Keras</span>
+        <span class="pill">SQL · R</span>
+        <span class="pill">Clinical Data</span>
+      </div>
+    </div>
+
+    <div class="timeline-entry">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2021 — Present</div>
+      <div class="timeline-role">SDE → Senior Technical Program Manager</div>
+      <div class="timeline-org">Amazon Web Services · Route 53 Health Checks · Seattle</div>
+      <p class="timeline-body">Started writing production code. Built the consensus algorithm, the health analytics platform, the cryptographic authentication system. Then grew into owning programs at a scale where writing code became one tool among many. Sole TPM on the $4.4B New Zealand region build. FedRAMP program for 3 years, zero breaches. Founded RedSkull, built Friday Recap, wrote the Tampermonkey tracker. Programs I built now run regions I will never manage. That's the goal.</p>
+      <div class="timeline-pills">
+        <span class="pill">Java · Python · SQL</span>
+        <span class="pill">Distributed Systems</span>
+        <span class="pill">FedRAMP IL4/IL5</span>
+        <span class="pill">Program Management</span>
+        <span class="pill">Incident Command</span>
+        <span class="pill">Executive Comms</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="projects" id="projects">
+  <div class="section-label">Engineering Projects</div>
+  <h2 class="section-title">Code I shipped.<br><em>Problems I chose.</em></h2>
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <div>
+        <div class="project-type">SDE · Distributed Systems</div>
+        <h3>Quorum Consensus Algorithm</h3>
+        <p>After a 112-minute production outage, I evaluated Paxos, Raft, and majority voting before choosing a 2-of-3 quorum design with graceful geographic degradation. Implemented in Java, integrated into the existing packet processing pipeline with stripe-level fault containment. Five-phase validation before production.</p>
+        <div class="project-stats">
+          <div class="p-stat"><span class="p-stat-num">60×</span><span class="p-stat-lbl">Faster</span></div>
+          <div class="p-stat"><span class="p-stat-num">9×</span><span class="p-stat-lbl">Consistency</span></div>
+          <div class="p-stat"><span class="p-stat-num">4wk</span><span class="p-stat-lbl">To Prod</span></div>
+          <div class="p-stat"><span class="p-stat-num">0</span><span class="p-stat-lbl">Outages Since</span></div>
+        </div>
+        <div class="tech-stack">
+          <span class="tech-tag">Java</span><span class="tech-tag">Distributed Systems</span><span class="tech-tag">Quorum Consensus</span><span class="tech-tag">Paxos/Raft Analysis</span><span class="tech-tag">UDP Packet Processing</span>
+        </div>
+      </div>
+      <div>
+        <div class="project-type">Context</div>
+        <p style="font-size: 0.85rem; color: rgba(245,240,232,0.4); line-height: 1.8;">Route 53 Health Checks monitors 6.85M endpoints across 64 global edge locations. One misconfigured Global Aggregator could propagate incorrect health data to the entire fleet. Blast radius was 100% before this fix. It is now single-source scoped.</p>
+        <div style="margin-top: 1.5rem; padding: 1.2rem; background: rgba(255,255,255,0.04); border-left: 2px solid var(--rust);">
+          <p style="font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: rgba(245,240,232,0.5); line-height: 1.7;">2.7B ops/cycle → 49M ops/cycle<br>45% inconsistencies → under 5%<br>100% blast radius → single-source scope</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-type">SDE · Observability</div>
+      <h3>Health Analytics Platform</h3>
+      <p>Full stack: Java, Elasticsearch, Kibana, SQL. Custom Python scraper for whale customer monitoring. 5-min collection cycles, bulk processing 1,000 configs per batch.</p>
+      <div class="project-stats">
+        <div class="p-stat"><span class="p-stat-num">10M+</span><span class="p-stat-lbl">Daily Metrics</span></div>
+        <div class="p-stat"><span class="p-stat-num">1M+</span><span class="p-stat-lbl">Endpoints</span></div>
+      </div>
+      <div class="tech-stack">
+        <span class="tech-tag">Java</span><span class="tech-tag">Elasticsearch</span><span class="tech-tag">Kibana</span><span class="tech-tag">SQL</span><span class="tech-tag">Python</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-type">SDE · Security Engineering</div>
+      <h3>Cryptographic Auth System</h3>
+      <p>Versioned signing-key system in Java. Region-isolated keys. Integrated into 6-thread UDP pipeline. Fail-safe design — key retrieval failure never causes a service outage.</p>
+      <div class="project-stats">
+        <div class="p-stat"><span class="p-stat-num">38+</span><span class="p-stat-lbl">Regions</span></div>
+        <div class="p-stat"><span class="p-stat-num">0</span><span class="p-stat-lbl">Downtime</span></div>
+      </div>
+      <div class="tech-stack">
+        <span class="tech-tag">Java</span><span class="tech-tag">Cryptography</span><span class="tech-tag">Key Management</span><span class="tech-tag">UDP</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-type">FDE · Tooling</div>
+      <h3>Tampermonkey Deployment Tracker</h3>
+      <p>Browser script. Scrapes 300+ pipelines, 700+ deployment pages, injects live state directly into Sev2 incident tickets. Zero infrastructure. Zero approval process. One week.</p>
+      <div class="project-stats">
+        <div class="p-stat"><span class="p-stat-num">40%</span><span class="p-stat-lbl">Triage Reduction</span></div>
+      </div>
+      <div class="tech-stack">
+        <span class="tech-tag">JavaScript</span><span class="tech-tag">Tampermonkey</span><span class="tech-tag">Web Scraping</span><span class="tech-tag">Incident Management</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-type">FDE · Automation</div>
+      <h3>Region Build Automation</h3>
+      <p>Python scripts for dependency graph automation. Compressed 20-day manual region build process to 1 day across 100 service components and 3 partitions.</p>
+      <div class="project-stats">
+        <div class="p-stat"><span class="p-stat-num">20×</span><span class="p-stat-lbl">Faster</span></div>
+      </div>
+      <div class="tech-stack">
+        <span class="tech-tag">Python</span><span class="tech-tag">CI/CD</span><span class="tech-tag">Dependency Graphs</span><span class="tech-tag">AWS</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-type">Data Science</div>
+      <h3>Medical Image Classification</h3>
+      <p>CNN-based cancer detection on WDBC database. Classified FNA cells as Benign/Malignant with 97% false label reduction. Multi-layer neural network with Keras on Fashion-MNIST.</p>
+      <div class="project-stats">
+        <div class="p-stat"><span class="p-stat-num">97%</span><span class="p-stat-lbl">False Label Reduction</span></div>
+      </div>
+      <div class="tech-stack">
+        <span class="tech-tag">Python</span><span class="tech-tag">CNN</span><span class="tech-tag">Keras</span><span class="tech-tag">TensorFlow</span><span class="tech-tag">Clinical Data</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SDE / TPM / FDE MATRIX -->
+<section class="matrix" id="skills">
+  <div class="section-label">Capability Matrix</div>
+  <h2 class="section-title">One person.<br><em>Three fluencies.</em></h2>
+  <div class="matrix-inner">
+    <div class="matrix-col">
+      <div class="matrix-col-header">SDE</div>
+      <div class="matrix-col-sub">Software Development Engineer</div>
+      <div class="matrix-items">
+        <div class="matrix-item">Java production code: consensus algorithm, cryptographic auth, health analytics platform</div>
+        <div class="matrix-item">Python automation: region builds, dependency graphs, customer monitoring scripts</div>
+        <div class="matrix-item">Distributed systems: quorum consensus, fault containment, UDP packet pipelines</div>
+        <div class="matrix-item">Observability stack: Elasticsearch, Kibana, SQL dashboards, real-time telemetry</div>
+        <div class="matrix-item">Security engineering: IMDSv2 migration, cryptographic signing, FedRAMP remediation</div>
+        <div class="matrix-item">Full SDLC: CI/CD pipelines, Jenkins, Docker, GitHub, 250+ pipeline templates standardized</div>
+        <div class="matrix-item">Machine learning: CNNs, logistic regression, clinical data, fraud detection</div>
+      </div>
+    </div>
+    <div class="matrix-col">
+      <div class="matrix-col-header">TPM</div>
+      <div class="matrix-col-sub">Technical Program Manager</div>
+      <div class="matrix-items">
+        <div class="matrix-item">$4.4B NZ region launch as sole TPM — zero SLA breaches, zero escalations</div>
+        <div class="matrix-item">$10M+ cross-org reliability program: 50+ engineers, 3 organizations, 3+ years</div>
+        <div class="matrix-item">FedRAMP program ownership: commercial, IL4/IL5, air-gapped classified — 3 years, zero breaches</div>
+        <div class="matrix-item">VP and Director stakeholder management: SQL-driven KPI dashboards, monthly business reviews</div>
+        <div class="matrix-item">Asana + Slack automation: ticket routing, SLA tracking, escalation triggers at scale</div>
+        <div class="matrix-item">Risk-based prioritization, dependency graph analysis, OKR and milestone frameworks</div>
+        <div class="matrix-item">Incident command: on-call lead for Sev1/Sev2 events on 6.85M-endpoint system</div>
+      </div>
+    </div>
+    <div class="matrix-col">
+      <div class="matrix-col-header">FDE</div>
+      <div class="matrix-col-sub">Forward Deployment Engineer</div>
+      <div class="matrix-items">
+        <div class="matrix-item">Customer obsession: built proactive whale-customer monitoring before anyone asked</div>
+        <div class="matrix-item">On-site problem solving: identified and fixed Sev2 triage pain during live incidents</div>
+        <div class="matrix-item">Cross-team leadership: trusted advisor to US Gov, IL4/IL5, air-gapped classified teams</div>
+        <div class="matrix-item">Knowledge transfer: DEI talks, Women in STEM, Neurodiversity communities at AWS</div>
+        <div class="matrix-item">RedSkull: built knowledge infrastructure for 30+ engineers across 4 teams</div>
+        <div class="matrix-item">Friday Recap: redesigned team operating mechanism, now serves performance reviews</div>
+        <div class="matrix-item">Capacity planning leadership: first cross-partition infrastructure inventory in org history</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUTSIDE THE TERMINAL -->
+<section class="outside">
+  <div>
+    <div class="section-label">Outside the Terminal</div>
+    <h2 class="section-title">The rest<br>of the stack.</h2>
+    <div class="outside-text">
+      <p>I am certified yoga instructor who completed training in 2024 after nearly two decades of practice. The same intentionality that makes a yoga practice work — breath before reaction, stillness under pressure — is what I bring to incident command at 2am.</p>
+      <p>I paint. I skate. I grow plants. I trained myself to be ambidextrous because I was curious about how the brain adapts. I read Kahneman and Cialdini for fun — cognitive biases, cultural impact, influence at scale — and I use all of it in how I communicate tradeoffs to leadership.</p>
+      <p>My mother was a bioscience teacher who raised me to be curious, thoughtful, and inclusive. That shaped everything. I speak at AWS communities for Women in STEM, Neurodiversity, and persons with disabilities. I built RedSkull because I couldn't watch new hires struggle through the same painful onboarding I went through.</p>
+      <p>I care about sustainability, practice it actively, and believe that building systems that run without you is the most sustainable thing an engineer can do.</p>
+    </div>
+  </div>
+  <div class="outside-mosaic">
+    <div class="mosaic-tile tall"><span class="emoji">🧘</span>Yoga Instructor</div>
+    <div class="mosaic-tile"><span class="emoji">🎨</span>Painting</div>
+    <div class="mosaic-tile"><span class="emoji">🌱</span>Plants</div>
+    <div class="mosaic-tile span2"><span class="emoji">📚</span>Kahneman · Cialdini · Goleman</div>
+    <div class="mosaic-tile"><span class="emoji">🛹</span>Skating</div>
+    <div class="mosaic-tile"><span class="emoji">🔬</span>Bioscience Roots</div>
+    <div class="mosaic-tile"><span class="emoji">✍️</span>Ambidextrous</div>
+    <div class="mosaic-tile"><span class="emoji">🌍</span>Sustainability</div>
+    <div class="mosaic-tile"><span class="emoji">🎤</span>DEI Speaker</div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-label">What's next</div>
+  <h2>Ready to build<br><em>something that lasts.</em></h2>
+  <p class="contact-sub">Looking for TPM II/III and Forward Deployment Engineer roles where I can get close to customers, build fast, and leave the team better than I found it.</p>
+  <a href="https://www.linkedin.com/in/rohney-pusuluri/" target="_blank" class="contact-btn">Connect on LinkedIn</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">© 2025 Rohney Pusuluri · rohney.io</div>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/rohney-pusuluri/" target="_blank">LinkedIn</a>
+    <a href="#proof">Work</a>
+    <a href="#projects">Projects</a>
+    <a href="#about">About</a>
+  </div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animCursor() {
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animCursor);
+  }
+  animCursor();
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '20px';
+      cursor.style.height = '20px';
+      cursor.style.background = 'var(--gold)';
+      ring.style.width = '50px';
+      ring.style.height = '50px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '12px';
+      cursor.style.height = '12px';
+      cursor.style.background = 'var(--rust)';
+      ring.style.width = '36px';
+      ring.style.height = '36px';
+    });
+  });
+
+  // Intersection Observer for animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.fade-up, .timeline-entry').forEach(el => observer.observe(el));
+
+  // Hero stat counter animation
+  function animateCounters() {
+    document.querySelectorAll('.stat-number').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(10px)';
+      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      setTimeout(() => {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      }, Math.random() * 600 + 200);
+    });
+  }
+  animateCounters();
+</script>
+</body>
+</html>
