@@ -160,37 +160,45 @@
     .matrix-col{border-right:none;border-bottom:1px solid var(--fog)}
   }
  
-.hero { padding-top: 0 !important; }
+ 
 </style>
 </head>
 <body>
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
-<nav style="position:fixed;top:0;left:0;right:0;z-index:500;display:flex;justify-content:space-between;align-items:center;padding:0 3rem;height:64px;background:rgba(245,240,232,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--fog)">
-  <span class="nav-logo">Rohney Pusuluri</span>
+<nav id="main-nav" style="position:fixed;top:0;left:0;right:0;z-index:500;display:flex;justify-content:space-between;align-items:center;padding:0 3rem;height:64px;background:rgba(245,240,232,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--fog)">
+  <a href="#" id="nav-identity" style="display:flex;align-items:center;gap:.75rem;text-decoration:none;opacity:0;pointer-events:none;transform:scale(0.75);transition:opacity 0.35s ease,transform 0.35s ease">
+    <img src="headshot.jpg" alt="Rohney Pusuluri" style="width:34px;height:34px;border-radius:50%;object-fit:cover;object-position:center 30%;border:1.5px solid var(--fog);display:block">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:.8rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--slate)">Rohney Pusuluri</span>
+  </a>
   <ul style="display:flex;gap:2rem;list-style:none;align-items:center">
-    <li><a href="#about" style="font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--rust)'" onmouseout="this.style.color='var(--muted)'">About</a></li>
+    <li><a href="#about" style="font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none" onmouseover="this.style.color='var(--rust)'" onmouseout="this.style.color='var(--muted)'">About</a></li>
     <li><a href="#proof" style="font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none" onmouseover="this.style.color='var(--rust)'" onmouseout="this.style.color='var(--muted)'">Work</a></li>
     <li><a href="#projects" style="font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none" onmouseover="this.style.color='var(--rust)'" onmouseout="this.style.color='var(--muted)'">Projects</a></li>
     <li><a href="#skills" style="font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none" onmouseover="this.style.color='var(--rust)'" onmouseout="this.style.color='var(--muted)'">Skills</a></li>
-    <li><a href="https://www.linkedin.com/in/rohney-pusuluri/overlay/1779413588852/single-media-viewer/?profileId=ACoAADTdB0UBL1B58iyIat6-ueATZ7iSCVr_DtM&lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base%3B1Mbqt%2B5GQQ2OWjsV1paWTw%3D%3D" target="_blank" rel="noopener" class="nav-cta">Resume</a></li>
+    <li><a href="https://www.linkedin.com/in/rohney-pusuluri/overlay/1779413588852/single-media-viewer/?profileId=ACoAADTdB0UBL1B58iyIat6-ueATZ7iSCVr_DtM&lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base%3B1Mbqt%2B5GQQ2OWjsV1paWTw%3D%3D" target="_blank" rel="noopener" style="font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--paper);background:var(--rust);padding:.45rem 1.1rem;text-decoration:none" onmouseover="this.style.background='var(--slate)'" onmouseout="this.style.background='var(--rust)'">Resume</a></li>
   </ul>
 </nav>
-<div style="width:100%;height:440px;position:relative;overflow:hidden;margin-top:64px">
-  <img src="headshot.jpg" alt="Rohney Pusuluri" style="width:100%;height:100%;object-fit:cover;object-position:center 18%;display:block;filter:brightness(0.48) saturate(0.8)">
-  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 25%,var(--paper) 100%)"></div>
+ 
+<!-- HERO BANNER: full face photo. Scrolling past it reveals the nav circle -->
+<div id="hero-banner" style="width:100%;height:520px;position:relative;overflow:hidden;margin-top:64px">
+  <img src="headshot.jpg" alt="Rohney Pusuluri"
+       style="width:100%;height:100%;object-fit:cover;object-position:center 30%;display:block;filter:brightness(0.5) saturate(0.85)">
+  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 35%,var(--paper) 100%)"></div>
   <div style="position:absolute;bottom:2.5rem;left:4rem;right:4rem;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:1rem">
     <div>
-      <p style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.55);margin-bottom:.4rem">Senior Software TPM · FDE · AWS</p>
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.5);margin-bottom:.4rem">Senior Software TPM · FDE · AWS</p>
       <h1 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,5.5rem);line-height:.95;letter-spacing:.02em;color:#fff;margin:0">ROHNEY <span style="color:var(--rust)">PUSULURI</span></h1>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:.45rem;justify-content:flex-end">
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;padding:.3rem .8rem;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);border:1px solid rgba(245,240,232,.25);color:rgba(245,240,232,.9);border-radius:20px">Force Multiplier</span>
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;padding:.3rem .8rem;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);border:1px solid rgba(245,240,232,.25);color:rgba(245,240,232,.9);border-radius:20px">Making things systematically better</span>
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;padding:.3rem .8rem;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);border:1px solid rgba(245,240,232,.25);color:rgba(245,240,232,.9);border-radius:20px">Automating boring tasks</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;padding:.3rem .8rem;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);border:1px solid rgba(245,240,232,.22);color:rgba(245,240,232,.9);border-radius:20px">Force Multiplier</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;padding:.3rem .8rem;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);border:1px solid rgba(245,240,232,.22);color:rgba(245,240,232,.9);border-radius:20px">Making things systematically better</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;padding:.3rem .8rem;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);border:1px solid rgba(245,240,232,.22);color:rgba(245,240,232,.9);border-radius:20px">Automating boring tasks</span>
     </div>
   </div>
 </div>
+<style>#hero-banner + section.hero, section.hero { padding-top: 0 !important; }</style>
+ 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-left">
@@ -340,6 +348,27 @@
   const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.15});
   document.querySelectorAll('.fade-up,.timeline-entry').forEach(el=>observer.observe(el));
   document.querySelectorAll('.stat-number').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(10px)';el.style.transition='opacity .5s ease,transform .5s ease';setTimeout(()=>{el.style.opacity='1';el.style.transform='translateY(0)'},Math.random()*600+200)});
+ 
+  // Banner → nav circle morph on scroll
+  (function(){
+    var banner = document.getElementById('hero-banner');
+    var identity = document.getElementById('nav-identity');
+    if(!banner || !identity) return;
+    function onScroll(){
+      var bannerBottom = banner.getBoundingClientRect().bottom;
+      if(bannerBottom <= 64){
+        identity.style.opacity = '1';
+        identity.style.transform = 'scale(1)';
+        identity.style.pointerEvents = 'auto';
+      } else {
+        identity.style.opacity = '0';
+        identity.style.transform = 'scale(0.75)';
+        identity.style.pointerEvents = 'none';
+      }
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+  })();
+ 
 </script>
 </body>
 </html>
