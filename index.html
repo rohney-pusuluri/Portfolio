@@ -928,18 +928,45 @@
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">Rohney Pusuluri</div>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#proof">Work</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#skills">Skills</a></li>
-  </ul>
-  <a class="nav-cta" href="https://www.linkedin.com/in/rohney-pusuluri/" target="_blank">Connect on LinkedIn</a>
-</nav>
+<!-- NAV Option C-->
+<!-- OPTION C: Headshot lives in the nav — visible on every scroll position -->
 
+<!-- Replace your existing <nav> with this -->
+<nav>
+  <div style="max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;height:58px">
+
+    <!-- left: headshot + name -->
+    <a href="#home" style="display:flex;align-items:center;gap:0.75rem;text-decoration:none">
+      <img
+        src="headshot.jpg"
+        alt="Rohney Pusuluri"
+        style="
+          width:36px;height:36px;border-radius:50%;
+          object-fit:cover;object-position:center 15%;
+          border:1.5px solid rgba(255,255,255,0.2)
+        "
+      >
+      <span style="font-family:'Lora',Georgia,serif;font-size:0.95rem;color:var(--text-primary,#fff);letter-spacing:-0.01em">Rohney Pusuluri</span>
+    </a>
+
+    <!-- right: existing nav links unchanged -->
+    <ul style="display:flex;gap:1.75rem;list-style:none;margin:0;padding:0">
+      <li><a href="#about" style="font-size:0.73rem;color:rgba(255,255,255,0.55);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;font-weight:500">About</a></li>
+      <li><a href="#proof" style="font-size:0.73rem;color:rgba(255,255,255,0.55);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;font-weight:500">Work</a></li>
+      <li><a href="#projects" style="font-size:0.73rem;color:rgba(255,255,255,0.55);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;font-weight:500">Projects</a></li>
+      <li><a href="#skills" style="font-size:0.73rem;color:rgba(255,255,255,0.55);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;font-weight:500">Skills</a></li>
+      <li>
+        
+          href="https://www.linkedin.com/in/rohney-pusuluri/overlay/1779413588852/single-media-viewer/?profileId=ACoAADTdB0UBL1B58iyIat6-ueATZ7iSCVr_DtM&lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base%3B1Mbqt%2B5GQQ2OWjsV1paWTw%3D%3D"
+          target="_blank"
+          rel="noopener"
+          style="font-size:0.73rem;padding:0.35rem 0.9rem;border:1px solid rgba(255,255,255,0.25);color:#fff;text-decoration:none;border-radius:2px;letter-spacing:0.06em"
+        >Resume</a>
+      </li>
+    </ul>
+
+  </div>
+</nav>
 <!-- HERO -->
 <section class="hero">
   <div class="hero-left">
