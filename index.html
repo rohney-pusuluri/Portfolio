@@ -149,6 +149,7 @@
   .fade-up:nth-child(2){transition-delay:.1s}
   .fade-up:nth-child(3){transition-delay:.2s}
   .fade-up:nth-child(4){transition-delay:.3s}
+  /* ── TABLET (900px) ── */
   @media(max-width:900px){
     .nav-links{display:none}
     .hero{grid-template-columns:1fr}
@@ -158,6 +159,84 @@
     .psyche-grid,.proof-grid,.projects-grid,.matrix-inner,.outside{grid-template-columns:1fr}
     .project-card:first-child{grid-column:span 1;grid-template-columns:1fr}
     .matrix-col{border-right:none;border-bottom:1px solid var(--fog)}
+  }
+ 
+  /* ── MOBILE (600px) — headshot hero fix ── */
+  @media(max-width:600px){
+    /* hide custom cursor on touch devices */
+    .cursor,.cursor-ring{display:none}
+    body{cursor:auto}
+ 
+    /* hero: stack vertically, photo first on mobile */
+    section[style*="grid-template-columns:1fr 1fr"],
+    section[style*="grid-template-columns: 1fr 1fr"]{
+      display:flex !important;
+      flex-direction:column !important;
+      min-height:unset !important;
+      padding-top:64px !important;
+    }
+ 
+    /* photo panel: fixed height, face centred */
+    section[style*="grid-template-columns"] > div:last-child,
+    .hero-photo-panel{
+      width:100% !important;
+      height:420px !important;
+      min-height:unset !important;
+      order:-1 !important; /* photo goes ABOVE text on mobile */
+    }
+ 
+    /* face crop for mobile portrait */
+    .hero-photo-panel img,
+    section[style*="grid-template-columns"] > div:last-child img{
+      object-position: center 22% !important;
+    }
+ 
+    /* left text panel */
+    section[style*="grid-template-columns"] > div:first-child{
+      padding: 2.5rem 1.25rem 2rem !important;
+    }
+ 
+    /* name size */
+    section[style*="grid-template-columns"] h1{
+      font-size: clamp(3.5rem,15vw,5rem) !important;
+    }
+ 
+    /* brand tags — allow wrap, smaller text */
+    section[style*="grid-template-columns"] > div:first-child > div[style*="flex-wrap"]{
+      gap:.35rem !important;
+    }
+    section[style*="grid-template-columns"] span[style*="border-radius:20px"]{
+      font-size:.58rem !important;
+      padding:.22rem .55rem !important;
+    }
+ 
+    /* stats strip: 3 columns on mobile */
+    div[style*="repeat(6,1fr)"]{
+      grid-template-columns: repeat(3,1fr) !important;
+    }
+ 
+    /* nav identity: hide on mobile (no room) */
+    #nav-identity{display:none !important}
+ 
+    /* nav padding */
+    nav{padding:0 1rem !important}
+ 
+    /* sections */
+    .psyche,.proof,.story,.projects,.matrix,.outside,.contact,footer{padding:3rem 1.25rem !important}
+    .psyche-grid,.proof-grid,.projects-grid,.matrix-inner,.outside{grid-template-columns:1fr !important}
+    .project-card:first-child{grid-column:span 1 !important;grid-template-columns:1fr !important}
+    .matrix-col{border-right:none !important;border-bottom:1px solid var(--fog) !important}
+ 
+    /* proof grid: 1 col on small mobile */
+    .proof-grid{grid-template-columns:1fr !important}
+ 
+    /* outside mosaic: 2 cols */
+    .outside-mosaic{grid-template-columns:repeat(2,1fr) !important;grid-template-rows:auto !important}
+    .mosaic-tile.tall{grid-row:span 1 !important}
+    .mosaic-tile.span2{grid-column:span 2 !important}
+ 
+    /* footer */
+    footer{flex-direction:column !important;gap:1rem !important;text-align:center !important}
   }
  
  
@@ -218,9 +297,9 @@
   </div>
  
   <!-- RIGHT: portrait photo, full height, contained -->
-  <div style="position:relative;overflow:hidden;background:var(--slate)">
+  <div class="hero-photo-panel" style="position:relative;overflow:hidden;background:var(--slate)">
     <img src="headshot.jpg" alt="Rohney Pusuluri"
-         style="width:100%;height:100%;object-fit:cover;object-position:center 45%;display:block">
+         style="width:100%;height:100%;object-fit:cover;object-position:center 28%;display:block">
     <!-- subtle dark overlay on left edge to blend with left panel -->
     <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(42,58,74,0.25) 0%,transparent 30%)"></div>
   </div>
