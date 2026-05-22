@@ -179,57 +179,82 @@
     <li><a href="https://www.linkedin.com/in/rohney-pusuluri/overlay/1779413588852/single-media-viewer/?profileId=ACoAADTdB0UBL1B58iyIat6-ueATZ7iSCVr_DtM&lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base%3B1Mbqt%2B5GQQ2OWjsV1paWTw%3D%3D" target="_blank" rel="noopener" style="font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--paper);background:var(--rust);padding:.45rem 1.1rem;text-decoration:none" onmouseover="this.style.background='var(--slate)'" onmouseout="this.style.background='var(--rust)'">Resume</a></li>
   </ul>
 </nav>
-<!-- scroll trigger: when this leaves viewport the nav circle appears -->
-<div id="scroll-trigger" style="width:100%;height:640px;position:relative;overflow:hidden;margin-top:64px">
-  <img src="headshot.jpg" alt="Rohney Pusuluri"
-       style="width:100%;height:100%;object-fit:cover;object-position:center 55%;display:block;filter:brightness(0.48) saturate(0.82)">
-  <!-- gradient fades image into page background at bottom -->
-  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--paper) 100%)"></div>
-  <!-- name + tags pinned to bottom-left of banner -->
-  <div style="position:absolute;bottom:2.75rem;left:4rem;right:4rem;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:1rem">
-    <div>
-      <p style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.5);margin-bottom:.4rem">Senior Software TPM · FDE · AWS</p>
-      <h1 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,5.5rem);line-height:.95;letter-spacing:.02em;color:#fff;margin:0">ROHNEY <span style="color:var(--rust)">PUSULURI</span></h1>
+<div id="scroll-trigger"></div>
+<!-- SIDE-BY-SIDE HERO -->
+<section style="min-height:100vh;display:grid;grid-template-columns:1fr 1fr;padding-top:64px;position:relative;overflow:hidden;background:var(--paper)">
+ 
+  <!-- LEFT: identity -->
+  <div style="display:flex;flex-direction:column;justify-content:center;padding:5rem 3rem 5rem 4rem;position:relative;z-index:2">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);margin-bottom:1.5rem;display:flex;align-items:center;gap:.8rem">
+      <span style="display:block;width:32px;height:1px;background:var(--rust)"></span>
+      rohney.com · Senior Software TPM (Forward Deployed Engineer) at AWS
     </div>
-    <div style="display:flex;flex-wrap:wrap;gap:.45rem;justify-content:flex-end;padding-bottom:.2rem">
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;padding:.3rem .8rem;background:rgba(0,0,0,.42);backdrop-filter:blur(8px);border:1px solid rgba(245,240,232,.22);color:rgba(245,240,232,.92);border-radius:20px">Force Multiplier</span>
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;padding:.3rem .8rem;background:rgba(0,0,0,.42);backdrop-filter:blur(8px);border:1px solid rgba(245,240,232,.22);color:rgba(245,240,232,.92);border-radius:20px">Making things systematically better</span>
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;padding:.3rem .8rem;background:rgba(0,0,0,.42);backdrop-filter:blur(8px);border:1px solid rgba(245,240,232,.22);color:rgba(245,240,232,.92);border-radius:20px">Automating boring tasks</span>
+    <h1 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,10vw,9rem);line-height:.9;letter-spacing:.02em;color:var(--ink);margin-bottom:1.5rem">ROHNEY<br><span style="color:var(--rust)">PUSULURI</span></h1>
+    <p style="font-family:'DM Serif Display',serif;font-style:italic;font-size:1.35rem;color:var(--slate);line-height:1.5;max-width:480px;margin-bottom:1.5rem">I build systems that outlast me, programs that run without me, and frameworks that every team after me just calls "the standard."</p>
+    <!-- brand tags -->
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.75rem">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;padding:.28rem .7rem;border:1px solid var(--rust);color:var(--rust);border-radius:20px">Force Multiplier</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;padding:.28rem .7rem;border:1px solid var(--slate);color:var(--slate);border-radius:20px">Making things systematically better</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;padding:.28rem .7rem;border:1px solid var(--slate);color:var(--slate);border-radius:20px">Automating boring tasks</span>
     </div>
+    <!-- role tags -->
+    <div style="display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:2.5rem">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--rust);padding:.35rem .8rem;color:var(--rust)">Technical Program Manager</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--rust);padding:.35rem .8rem;color:var(--rust)">Software Engineer</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--rust);padding:.35rem .8rem;color:var(--rust)">Forward Deployment</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--slate);padding:.35rem .8rem;color:var(--slate)">AWS · Route 53</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--slate);padding:.35rem .8rem;color:var(--slate)">FedRAMP · IL4 · IL5</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--slate);padding:.35rem .8rem;color:var(--slate)">Distributed Systems</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--slate);padding:.35rem .8rem;color:var(--slate)">Yoga Instructor</span>
+    </div>
+    <div style="display:flex;gap:1rem;align-items:center">
+      <a href="https://www.linkedin.com/in/rohney-pusuluri/" target="_blank"
+         style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:.9rem 2rem;text-decoration:none;display:inline-block;transition:background .2s"
+         onmouseover="this.style.background='var(--rust)'" onmouseout="this.style.background='var(--ink)'">View LinkedIn</a>
+      <a href="#proof"
+         style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:.5rem"
+         onmouseover="this.style.color='var(--rust)'" onmouseout="this.style.color='var(--muted)'">See the work ↓</a>
+    </div>
+  </div>
+ 
+  <!-- RIGHT: portrait photo, full height, contained -->
+  <div style="position:relative;overflow:hidden;background:var(--slate)">
+    <img src="headshot.jpg" alt="Rohney Pusuluri"
+         style="width:100%;height:100%;object-fit:cover;object-position:center 45%;display:block">
+    <!-- subtle dark overlay on left edge to blend with left panel -->
+    <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(42,58,74,0.25) 0%,transparent 30%)"></div>
+  </div>
+ 
+</section>
+ 
+<!-- STATS STRIP (replaces the stats grid that was inside hero-right) -->
+<div style="background:var(--slate);display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background-color:rgba(255,255,255,.06)">
+  <div style="background:var(--slate);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.75rem 1rem;position:relative;overflow:hidden;transition:background .4s;cursor:default" onmouseover="this.style.background='#1e2d3d'" onmouseout="this.style.background='var(--slate)'">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:2.75rem;color:var(--gold);line-height:1;margin-bottom:.25rem">$4.4B</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);text-align:center">NZ Region<br>Sole TPM</div>
+  </div>
+  <div style="background:var(--slate);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.75rem 1rem;position:relative;overflow:hidden;transition:background .4s;cursor:default" onmouseover="this.style.background='#1e2d3d'" onmouseout="this.style.background='var(--slate)'">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:2.75rem;color:var(--gold);line-height:1;margin-bottom:.25rem">60×</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);text-align:center">Perf. Gain<br>Consensus Algo</div>
+  </div>
+  <div style="background:var(--slate);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.75rem 1rem;position:relative;overflow:hidden;transition:background .4s;cursor:default" onmouseover="this.style.background='#1e2d3d'" onmouseout="this.style.background='var(--slate)'">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:2.75rem;color:var(--gold);line-height:1;margin-bottom:.25rem">95%</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);text-align:center">Per-Region<br>Effort Reduction</div>
+  </div>
+  <div style="background:var(--slate);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.75rem 1rem;position:relative;overflow:hidden;transition:background .4s;cursor:default" onmouseover="this.style.background='#1e2d3d'" onmouseout="this.style.background='var(--slate)'">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:2.75rem;color:var(--gold);line-height:1;margin-bottom:.25rem">3YR</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);text-align:center">Zero Breaches<br>FedRAMP</div>
+  </div>
+  <div style="background:var(--slate);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.75rem 1rem;position:relative;overflow:hidden;transition:background .4s;cursor:default" onmouseover="this.style.background='#1e2d3d'" onmouseout="this.style.background='var(--slate)'">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:2.75rem;color:var(--gold);line-height:1;margin-bottom:.25rem">73%</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);text-align:center">MTTR<br>Reduction</div>
+  </div>
+  <div style="background:var(--slate);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.75rem 1rem;position:relative;overflow:hidden;transition:background .4s;cursor:default" onmouseover="this.style.background='#1e2d3d'" onmouseout="this.style.background='var(--slate)'">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:2.75rem;color:var(--gold);line-height:1;margin-bottom:.25rem">8+</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);text-align:center">Global Regions<br>on My Framework</div>
   </div>
 </div>
-<!-- hero section follows with no top padding since banner provides offset -->
-<style>.hero{padding-top:0!important}</style>
  
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-left">
-    
-    <div class="hero-eyebrow">rohney.com · Senior Software TPM (Forward Deployed Engineer) at AWS</div>
-    <h1 class="hero-name">ROHNEY<br><span>PUSULURI</span></h1>
-    <p class="hero-descriptor">I build systems that outlast me, programs that run without me, and frameworks that every team after me just calls "the standard."</p>
-    <div class="hero-tags">
-      <span class="tag accent">Technical Program Manager</span><span class="tag accent">Software Engineer</span><span class="tag accent">Forward Deployment</span><span class="tag">AWS · Route 53</span><span class="tag">FedRAMP · IL4 · IL5</span><span class="tag">Distributed Systems</span><span class="tag">Yoga Instructor</span>
-    </div>
-    <div class="hero-actions">
-      <a href="https://www.linkedin.com/in/rohney-pusuluri/" target="_blank" class="btn-primary">View LinkedIn</a>
-      <a href="#proof" class="btn-secondary">See the work ↓</a>
-    </div>
-  </div>
-  <div class="hero-right">
-    <div class="hero-visual">
-      <div class="hero-stats-grid">
-        <div class="stat-cell"><div class="stat-number">$4.4B</div><div class="stat-label">NZ Region<br>Sole TPM</div></div>
-        <div class="stat-cell"><div class="stat-number">60×</div><div class="stat-label">Perf. Gain<br>Consensus Algo</div></div>
-        <div class="stat-cell"><div class="stat-number">95%</div><div class="stat-label">Per-Region<br>Effort Reduction</div></div>
-        <div class="stat-cell"><div class="stat-number">3YR</div><div class="stat-label">Zero Breaches<br>FedRAMP</div></div>
-        <div class="stat-cell"><div class="stat-number">73%</div><div class="stat-label">MTTR<br>Reduction</div></div>
-        <div class="stat-cell"><div class="stat-number">8+</div><div class="stat-label">Global Regions<br>on My Framework</div></div>
-      </div>
-    </div>
-  </div>
-  <div class="hero-scroll-hint"><div class="scroll-line"></div>scroll to explore</div>
-</section>
 <div class="marquee-wrap" aria-hidden="true">
   <div class="marquee-inner">
     <span class="marquee-item">AWS New Zealand Region</span><span class="marquee-item">Consensus Algorithm</span><span class="marquee-item">FedRAMP · IL4 · IL5</span><span class="marquee-item">100K+ Weekly Patch Events</span><span class="marquee-item">10M+ Daily Metrics</span><span class="marquee-item">Force Multiplier</span><span class="marquee-item">Incident Commander</span><span class="marquee-item">6.85M Endpoints</span><span class="marquee-item">AWS New Zealand Region</span><span class="marquee-item">Consensus Algorithm</span><span class="marquee-item">FedRAMP · IL4 · IL5</span><span class="marquee-item">100K+ Weekly Patch Events</span><span class="marquee-item">10M+ Daily Metrics</span><span class="marquee-item">Force Multiplier</span><span class="marquee-item">Incident Commander</span><span class="marquee-item">6.85M Endpoints</span>
